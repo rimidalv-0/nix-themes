@@ -2,14 +2,30 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: {
+  outputs =
+    { ... }:
+    let
+      themeDir = ./themes;
+      entries = builtins.readDir themeDir;
+      themeFileNames = builtins.filter (
+        name:
+        let
+          t = entries.${name}.type;
+        in
+        t == "regular" && builtins.match ".*\\.nix" name != null
+      ) (builtins.attrNames entries);
 
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+      themes = builtins.listToAttrs (
+        builtins.map (name: {
+          name = builtins.replaceStrings [ ".nix" ] [ "" ] name;
+          value = import "${themeDir}/${name}";
+        }) themeFileNames
+      );
 
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
-  };
+    in
+    {
+      themes = themes;
+    };
 }
