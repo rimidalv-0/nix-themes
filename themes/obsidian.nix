@@ -22,7 +22,7 @@ rec {
     succes = base02;
   };
 
-  base00 = "#0A0A0F";
+  base00 = "#000000";
   base08 = "#07070B";
 
   base01 = "#bd4a40";
