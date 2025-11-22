@@ -1,0 +1,23 @@
+{
+  "nodes": {
+    "root": {
+      "inputs": {
+        "walls": "walls"
+      }
+    },
+    "walls": {
+      "flake": false,
+      "locked": {
+        "path": "wall",
+        "type": "path"
+      },
+      "original": {
+        "path": "wall",
+        "type": "path"
+      },
+      "parent": []
+    }
+  },
+  "root": "root",
+  "version": 7
+}

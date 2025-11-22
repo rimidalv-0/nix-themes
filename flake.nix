@@ -2,28 +2,23 @@
   description = "A very basic flake";
 
   inputs = {
+    walls.url = ./wall;
+    walls.flake = false;
   };
 
   outputs =
-    { ... }:
+    { walls, ... }:
     let
+
       themeDir = ./themes;
-      entries = builtins.readDir themeDir;
-      themeFileNames = builtins.filter (
-        name:
-        let
-          t = entries.${name}.type;
-        in
-        t == "regular" && builtins.match ".*\\.nix" name != null
-      ) (builtins.attrNames entries);
+      themeNames = builtins.readDir themeDir;
 
       themes = builtins.listToAttrs (
         builtins.map (name: {
           name = builtins.replaceStrings [ ".nix" ] [ "" ] name;
-          value = import "${themeDir}/${name}";
-        }) themeFileNames
+          value = import "${themeDir}/${name}" { inherit walls; };
+        }) (builtins.attrNames themeNames)
       );
-
     in
     {
       themes = themes;
